@@ -1,0 +1,26 @@
+{
+    "name": "hatframework/resources/html",
+    "type": "library",
+    "description": "",
+    "keywords": [],
+    "homepage": "https://github.com/hat-framework/resources/html",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Thompson Filgueiras",
+            "email": "thom@hat-framework.org",
+            "homepage": "http://hat-framework.org",
+            "role": "Developer"
+        }
+    ],
+    "require": {
+        "ext-curl": "*",
+        "ext-json": "*",
+        "php": ">=5.3.0"
+    },
+    "autoload": {
+        "psr-0": {
+            "resource\html\\": "src/"
+        }
+    }
+}
