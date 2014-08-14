@@ -1,9 +1,9 @@
 {
-    "name": "hatframework/resources/html",
+    "name": "hatframework/hat-resource-html",
     "type": "library",
     "description": "",
     "keywords": [],
-    "homepage": "https://github.com/hat-framework/resources/html",
+    "homepage": "https://github.com/hat-framework/hat-resource-html",
     "license": "MIT",
     "authors": [
         {
