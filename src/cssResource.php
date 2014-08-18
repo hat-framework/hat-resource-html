@@ -17,13 +17,13 @@ class cssResource extends \classes\Interfaces\resource{
     }
     
     public function LoadCssIfExists($template, $theme, $media, $css, $print = true, $unique = false){
-        $files[] = TEMPLATES. "$template/themes/$theme/$css";
-        $files[] = TEMPLATES. "$template/themes/default/$css";
-        $files[] = TEMPLATES. "$template/css/$css";
+        $files[] = \classes\Classes\Registered::getTemplateLocation($template). "/themes/$theme/$css";
+        $files[] = \classes\Classes\Registered::getTemplateLocation($template). "/themes/default/$css";
+        $files[] = \classes\Classes\Registered::getTemplateLocation($template). "/css/$css";
         foreach($files as $file){
             //echo $file . "<br/>";
-            if(!file_exists($file)) continue;
-            $url   = str_replace(TEMPLATES, URL_TEMPLATES, $file);
+            if(!file_exists(DIR_BASIC.$file)) continue;
+            $url   = URL.$file;
             if($unique) $url .= "?".  genKey('6');
             $media = ($media == '') ? 'screen': $media;
             $var = "<link rel='stylesheet' type='text/css' href='$url' media='$media'/>\n";

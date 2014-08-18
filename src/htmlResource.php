@@ -52,8 +52,8 @@ class htmlResource extends \classes\Interfaces\resource{
         $this->LoadResource('html/css', 'css');
         $template = str_replace("-", "_", $this->template_name);
         $class = $template . "Theme";
-        $file = TEMPLATES . "$this->template_name/$class.php";
-
+        $file = \classes\Classes\Registered::getTemplateLocation($this->template_name, true) . "/$class.php";
+        
         if(file_exists($file)){
             require_once $file;
             if(class_exists($class)){
@@ -95,14 +95,14 @@ class htmlResource extends \classes\Interfaces\resource{
     }
     
     public function getUrlImage($image, $alert = true){
-        $temp = $this->template_name ."/img/" . $image;
-        $file = TEMPLATES.strtolower($temp);
+        $temp = "/img/" . $image;
+        $file = \classes\Classes\Registered::getTemplateLocation($this->template_name, true).strtolower($temp);
         getTrueDir($file);
         if(!file_exists($file)){
             if($alert) echo "<div class='erro'>erro ao carregar a imagem $file</div>";
             return "";
         }
-        return strtolower(URL. str_replace(array('//', '\\', '\\\\'), "/", TEMPLATE_FOLDER .$temp));
+        return strtolower(URL. \classes\Classes\Registered::getTemplateLocation($this->template_name).strtolower($temp));
     }
     
     public function LoadExternImage($image, $class="", $print = true, $extra = ""){
