@@ -287,10 +287,10 @@ class htmlResource extends \classes\Interfaces\resource{
         }
     }
     
-    public function LoadBowerComponent($file){
+    public function LoadBowerComponent($file, $instant = true){
         if(!is_array($file)){$file = array($file);}
         foreach($file as &$f){$f = "bower_components/$f";}
-        $this->LoadJs($file);
+        $this->LoadJs($file, $instant);
     }
     
     public function LoadPlugin($file){
@@ -319,15 +319,9 @@ class htmlResource extends \classes\Interfaces\resource{
     public function LoadJQuery(){
         if(isset($_REQUEST['ajax'])) return;
     	if($this->jquery) return;
-        $this->jquery = true;
-        //$js = URL."static/js/jquery-latest.min.js";
-        $js   = URL."static/js/jquery.2.0.min.js";
-        $js2  = URL."static/js/jquery.migrate.js";
-        $var  = "\t<script type='text/javascript' src='$js'></script>\n\t";
-        $var .= "\t<script type='text/javascript' src='$js2'></script>\n\t";
-        
-        if(!$this->started)$this->addToStarted[] = $var;
-        else echo "$var"; 
+        $this->jquery = true;        
+        $this->LoadBowerComponent('jquery/jquery.min', false);
+        $this->LoadBowerComponent('jquery/migrate.min', false);
     }
     
     public function isStarted(){
