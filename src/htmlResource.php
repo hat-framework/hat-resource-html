@@ -293,6 +293,11 @@ class htmlResource extends \classes\Interfaces\resource{
         $this->LoadJs($file, $instant);
     }
     
+    public function getBowerComponentItem($file){
+        $file = DIR_JS . "bower_components/$file";
+        return(file_exists($file))?URL_JS . "bower_components/$file":"";
+    }
+    
     public function LoadPlugin($file){
         if(!is_array($file)){$file = array($file);}
         foreach($file as &$f){$f = "plugins/$f";}
@@ -320,8 +325,8 @@ class htmlResource extends \classes\Interfaces\resource{
         if(isset($_REQUEST['ajax'])) return;
     	if($this->jquery) return;
         $this->jquery = true;        
-        $this->LoadBowerComponent('jquery/jquery.min', false);
-        $this->LoadBowerComponent('jquery/migrate.min', false);
+        $this->LoadBowerComponent('jquery/dist/jquery.min', false);
+        $this->LoadBowerComponent('jquery-migrate/jquery-migrate.min', false);
     }
     
     public function isStarted(){
