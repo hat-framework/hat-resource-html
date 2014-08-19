@@ -22,7 +22,7 @@ class cssResource extends \classes\Interfaces\resource{
         $files[] = \classes\Classes\Registered::getTemplateLocation($template). "/css/$css";
         foreach($files as $file){
             //echo $file . "<br/>";
-            if(!file_exists(DIR_BASIC.$file)) continue;
+            if(!file_exists(BASE_DIR.$file)) continue;
             $url   = URL.$file;
             if($unique) $url .= "?".  genKey('6');
             $media = ($media == '') ? 'screen': $media;
