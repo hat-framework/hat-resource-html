@@ -249,7 +249,9 @@ class htmlResource extends \classes\Interfaces\resource{
     
     public function LoadJsFunction($function, $instant = false, $type = "text/javascript", $id = ""){
         $id = ($id != "")?"id='$id'":"";
-        if(!$instant && $id == ""){
+        if(!array_key_exists($type, $this->jsfunctions)) $this->jsfunctions[$type] = "";
+        $this->jsfunctions[$type] .= "try{ $function } catch(e){ __html.exception(e); } $this->separador";
+        /*if(!$instant && $id == ""){
             if(!array_key_exists($type, $this->jsfunctions)) $this->jsfunctions[$type] = "";
             $this->jsfunctions[$type] .= "try{ $function } catch(e){ __html.exception(e); } $this->separador";
         }
@@ -257,7 +259,7 @@ class htmlResource extends \classes\Interfaces\resource{
             $temp = "<script type='$type' $id> try{ $function } catch(e){ __html.exception(e); } </script>";
             if(!$this->started) $this->addToStarted[] = $temp;
             else echo $temp;
-        }
+        }*/
     }
     
     public function LoadJs($jss, $instant = false, $uniqueurl = false){
@@ -271,11 +273,12 @@ class htmlResource extends \classes\Interfaces\resource{
             $uniqueurl = ($uniqueurl)?"?t=".genKey(6):"";
             $js = $js . ".js".$uniqueurl;
             $js = str_replace('.js.js', '.js', $js);
-            if(!$instant){
+            $this->js_file[$js] = "";
+            /*if(!$instant){
                 $var = "<script type='text/javascript' src='$js'></script>";
                 if($this->started) echo $var;
                 else $this->addToStarted[] = $var;
-            }else $this->js_file[$js] = "";
+            }else $this->js_file[$js] = "";*/
         }
     }
     
