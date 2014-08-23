@@ -102,7 +102,7 @@ class htmlResource extends \classes\Interfaces\resource{
             if($alert) echo "<div class='erro'>erro ao carregar a imagem $file</div>";
             return "";
         }
-        return strtolower(URL. \classes\Classes\Registered::getTemplateLocation($this->template_name).strtolower($temp));
+        return URL. \classes\Classes\Registered::getTemplateLocation($this->template_name).strtolower($temp);
     }
     
     public function LoadExternImage($image, $class="", $print = true, $extra = ""){
