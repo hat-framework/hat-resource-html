@@ -309,8 +309,8 @@ class htmlResource extends \classes\Interfaces\resource{
     
     private function loadAngularFile($file){
         if($file == ""){
-            $this->LoadJs('angular/angular');
-            $this->loadCss('animate');
+            $this->LoadBowerComponent('angular/angular.min');
+            $this->LoadBowerComponent('angular-animate/angular-animate.min');
         }
         else {
             $this->LoadJs("angular/$file");
