@@ -301,9 +301,11 @@ class htmlResource extends \classes\Interfaces\resource{
         return(file_exists($file))?URL_JS . "bower_components/$file":"";
     }
     
-    public function LoadPlugin($file){
+    public function LoadPlugin($plugname, $files){
+        if($files === "" || empty($files)){return;}
         if(!is_array($file)){$file = array($file);}
-        foreach($file as &$f){$f = "plugins/$f";}
+        $url = \classes\Classes\Registered::getPluginLocationUrl($plugname);
+        foreach($file as &$f){$f = "$url/$f";}
         $this->LoadJs($file);
     }
     
