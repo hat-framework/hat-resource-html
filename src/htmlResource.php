@@ -303,10 +303,10 @@ class htmlResource extends \classes\Interfaces\resource{
     
     public function LoadPlugin($plugname, $files){
         if($files === "" || empty($files)){return;}
-        if(!is_array($file)){$file = array($file);}
+        if(!is_array($files)){$files = array($files);}
         $url = \classes\Classes\Registered::getPluginLocationUrl($plugname);
-        foreach($file as &$f){$f = "$url/$f";}
-        $this->LoadJs($file);
+        foreach($files as &$f){$f = "$url/$f";}
+        $this->LoadJs($files);
     }
     
     private function loadAngularFile($file){
