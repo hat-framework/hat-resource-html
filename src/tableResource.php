@@ -36,7 +36,7 @@ class tableResource extends \classes\Interfaces\resource {
         $this->drawheaders = true;
     }
     
-    public function draw($center, $header = array(),$footer = array(), $id = "", $class = "tablesorter"){
+    public function draw($center, $header = array(),$footer = array(), $id = "", $class = "table table-hover table-stripped"){
 
         if(!$this->drawheaders &&(!is_array($center) || empty ($center))) return;
         $this->load();
@@ -177,5 +177,3 @@ class tableResource extends \classes\Interfaces\resource {
         echo $this->flush;
     }
 }
-
-?>
