@@ -189,7 +189,8 @@ class htmlResource extends \classes\Interfaces\resource{
             if(!defined('CURRENT_URL')) define ('CURRENT_URL', (isset($_GET['url'] )? $_GET['url']:""));
             $url = (CURRENT_URL != $url || $force_full_link)?URL.$url:"#";
         }
-    	return $url;
+        
+    	return $url.getSystemParams();
     }
     
     public function getActionLinkIfHasPermission($action_url, $texto_link, $class = '', $id = "", $target = ""){
