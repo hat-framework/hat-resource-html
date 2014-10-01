@@ -195,12 +195,12 @@ class htmlResource extends \classes\Interfaces\resource{
     
     public function getActionLinkIfHasPermission($action_url, $texto_link, $class = '', $id = "", $target = ""){
         $function = "";
-        
+        //echo "($action_url)";
         //se url não contém o prefixo http
         if((strstr($action_url, 'http://') === false && strstr($action_url, 'https://') === false)){
             if(isset($action_url[0]) && $action_url[0] != "#"){
-                $this->LoadModel('usuario/perfil', 'perm');
-                if(!$this->perm->hasPermission($action_url)) return "";
+                $temp = $action_url;
+                if(!$this->LoadModel('usuario/perfil', 'perm')->hasPermission($temp)) {return "";}
             }else $action_url = CURRENT_URL . "$action_url";
         }
         
@@ -210,6 +210,7 @@ class htmlResource extends \classes\Interfaces\resource{
             $target = "_blank";
             $function = "onclick='if(!confirm(\"Você está deixando o site ".SITE_NOME." e indo para o site $action_url. Deseja continuar?\")){return false;}'";
         }
+        //echo "($action_url)";
         
         $url = $this->getLink($action_url);
         $target = ($target == "")?"":"target='$target'";
