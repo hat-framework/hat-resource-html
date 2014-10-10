@@ -174,6 +174,7 @@ class htmlResource extends \classes\Interfaces\resource{
      * Tratamento de links
      */
     public function getLink($url, $block_amigavel = false, $force_full_link = false){
+        //echoBr($url);
         if(strstr($url, 'http://') === false && strstr($url, 'https://') === false){
             if(!isset($_SESSION['projeto']) || (defined('is_admin') && is_admin)){
                 if($block_amigavel || !is_amigavel){
@@ -189,11 +190,10 @@ class htmlResource extends \classes\Interfaces\resource{
             if(!defined('CURRENT_URL')) define ('CURRENT_URL', (isset($_GET['url'] )? $_GET['url']:""));
             $url = (CURRENT_URL != $url || $force_full_link)?URL.$url:"#";
         }
-        
-    	return $url.getSystemParams();
+        return $url.getSystemParams();
     }
     
-    public function getActionLinkIfHasPermission($action_url, $texto_link, $class = '', $id = "", $target = ""){
+    public function getActionLinkIfHasPermission($action_url, $texto_link, $class = '', $id = "", $target = "", $extra = ''){
         $function = "";
         //echo "($action_url)";
         //se url não contém o prefixo http
@@ -214,7 +214,7 @@ class htmlResource extends \classes\Interfaces\resource{
         
         $url = $this->getLink($action_url);
         $target = ($target == "")?"":"target='$target'";
-        return "<a href='$url' id='$id' class='action_perm $class' $function $target>$texto_link</a>";
+        return "<a href='$url' id='$id' class='action_perm $class' $function $target $extra>$texto_link</a>";
     }
     
     public function MakeLink($link, $text, $class="", $print = false, $print_empty_link = true, $id = ''){
