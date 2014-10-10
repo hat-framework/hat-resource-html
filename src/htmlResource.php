@@ -122,6 +122,7 @@ class htmlResource extends \classes\Interfaces\resource{
      * Carregamento de css
      */
     public function addSytle($csss){
+        if(trim($csss) === ""){return;};
         if(!$this->started) $this->addToStarted[] = $csss;
         else echo "<style>$csss</style>";
     }
