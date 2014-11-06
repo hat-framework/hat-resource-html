@@ -29,8 +29,7 @@ class htmlResource extends \classes\Interfaces\resource{
         $this->LoadResource('js/jsminifier', 'jsmin');
         $this->LoadJs(URL_JS . "lib/html/html");
         $this->separador     = (DEBUG)?"\n\n\t":"";
-        if(isset($_GET['template']))$this->template_name = $_GET['template'];
-        elseif(defined("CURRENT_TEMPLATE")) $this->template_name = CURRENT_TEMPLATE;
+        if(defined("CURRENT_TEMPLATE")) $this->template_name = CURRENT_TEMPLATE;
         else $this->template_name = "area-admin";
         return $this->load();
     }
@@ -195,7 +194,7 @@ class htmlResource extends \classes\Interfaces\resource{
     }
     
     public function getActionLinkIfHasPermission($action_url, $texto_link, $class = '', $id = "", $target = "", $extra = ''){
-        $function = "";
+        $function = "";$this->curModel = '';
         //echo "($action_url)";
         //se url não contém o prefixo http
         if((strstr($action_url, 'http://') === false && strstr($action_url, 'https://') === false)){
@@ -203,6 +202,7 @@ class htmlResource extends \classes\Interfaces\resource{
                 $temp = $action_url;
                 if(!$this->LoadModel('usuario/perfil', 'perm')->hasPermission($temp)) {return "";}
             }else $action_url = CURRENT_URL . "$action_url";
+            $action_url = $this->discoverModel($action_url);
         }
         
         //se o usuário estiver saindo do site
@@ -213,10 +213,21 @@ class htmlResource extends \classes\Interfaces\resource{
         }
         //echo "($action_url)";
         
-        $url = $this->getLink($action_url);
+        $url    = $this->getLink($action_url);
         $target = ($target == "")?"":"target='$target'";
         return "<a href='$url' id='$id' class='action_perm $class' $function $target $extra>$texto_link</a>";
     }
+        private function discoverModel($bs){
+            $bs = trim($bs);
+            if(strstr($bs, 'http://') !== false || strstr($bs, 'https://') !== false){return $bs;}
+            if($bs == "#" || $bs == ""){return $bs;}
+            $e = explode('/', $bs);
+            if(!isset($e[2])||$e[2] === 'index' || !isset($e[1])||$e[1] === 'index'){return $bs;}
+            while(count($e) > 2){array_pop($e);}
+            $this->curModel = implode("/", $e);
+            $val = (isset($_SESSION[$this->curModel]))?"/{$_SESSION[$this->curModel]}":"";
+            return $bs . $val;
+        }
     
     public function MakeLink($link, $text, $class="", $print = false, $print_empty_link = true, $id = ''){
 
