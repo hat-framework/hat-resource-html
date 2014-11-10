@@ -75,6 +75,7 @@ class htmlResource extends \classes\Interfaces\resource{
     public function getImageIfExists($image, $class="", $print = true, $extra = ""){
 
         $image    = $this->getUrlImage($image, false);
+        if($image === ""){return "";}
         $imprimir = $this->getImage($image, $class, $extra);
 
         if(!$print) return $imprimir;
