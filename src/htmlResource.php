@@ -226,7 +226,10 @@ class htmlResource extends \classes\Interfaces\resource{
             if(!isset($e[2])||$e[2] === 'index' || !isset($e[1])||$e[1] === 'index'){return $bs;}
             while(count($e) > 2){array_pop($e);}
             $this->curModel = implode("/", $e);
-            $val = (isset($_SESSION[$this->curModel]))?"/{$_SESSION[$this->curModel]}":"";
+            $val = "";
+            if(isset($_SESSION[$this->curModel])){
+                $val = (is_array($_SESSION[$this->curModel]))?"/".implode("/", $_SESSION[$this->curModel]):"/{$_SESSION[$this->curModel]}";
+            }
             return $bs . $val;
         }
     
