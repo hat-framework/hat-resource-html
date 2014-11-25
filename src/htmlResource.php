@@ -308,10 +308,13 @@ class htmlResource extends \classes\Interfaces\resource{
         }
     }
     
-    public function LoadBowerComponent($file, $instant = true){
+    public function LoadBowerComponent($file, $css_files = array()){
         if(!is_array($file)){$file = array($file);}
         foreach($file as &$f){$f = "bower_components/$f";}
-        $this->LoadJs($file, $instant);
+        $this->LoadJs($file, true);
+        
+        if(!is_array($css_files) || empty($css_files)){return;}
+        $this->LoadBowerComponentCss($css_files);
     }
     
     public function getBowerComponentItem($file){
