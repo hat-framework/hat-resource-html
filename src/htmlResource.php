@@ -300,6 +300,30 @@ class htmlResource extends \classes\Interfaces\resource{
         }
     }
     
+     public function LoadJsAbteste($jss, $template, $instant = false, $uniqueurl = false){
+        if(strstr($_SERVER['HTTP_HOST'], ".") !== false){
+        $url_template = URL.\classes\Classes\Registered::getTemplateLocation($template);
+        static $loaded = array();
+        if(!is_array($jss)) $jss = array($jss);
+        foreach($jss as $page => $js){
+            if(CURRENT_MODULE.'/'.CURRENT_CONTROLLER.'/'.CURRENT_ACTION != $page)continue;  
+            $js = $url_template."/js/abteste/".$js;
+            if(strstr($js, 'http') === false) $js = URL_JS . $js;
+            if(array_key_exists($js, $this->js_file)) continue;
+            if(array_key_exists($js, $loaded)) continue;
+            $loaded[$js] = "";
+            $uniqueurl = ($uniqueurl)?"?t=".genKey(6):"";
+            $js = $js . ".js".$uniqueurl;
+            $js = str_replace('.js.js', '.js', $js);
+            $this->js_file[$js] = "";
+            /*if(!$instant){
+                $var = "<script type='text/javascript' src='$js'></script>";
+                if($this->started) echo $var;
+                else $this->addToStarted[] = $var;
+            }else $this->js_file[$js] = "";*/
+        }
+       }
+    }
     
     public function LoadBowerComponentCss($file){
         if(!is_array($file)){$file = array($file);}
