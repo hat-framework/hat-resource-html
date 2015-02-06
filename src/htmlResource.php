@@ -223,6 +223,7 @@ class htmlResource extends \classes\Interfaces\resource{
             if(strstr($bs, 'http://') !== false || strstr($bs, 'https://') !== false){return $bs;}
             if($bs == "#" || $bs == ""){return $bs;}
             $e = explode('/', $bs);
+            if(count($e) > 3){return $bs;}
             if(!isset($e[2])||$e[2] === 'index' || !isset($e[1])||$e[1] === 'index'){return $bs;}
             while(count($e) > 2){array_pop($e);}
             $this->curModel = implode("/", $e);
