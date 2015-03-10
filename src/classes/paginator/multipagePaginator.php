@@ -22,10 +22,8 @@ class multipagePaginator extends drawPaginator{
             $var .= "<li $active><a href='$link#pag_$table' $class>$num</a></li>";
         }
         if($var == "") return "";
-        $out = "<div class='paginator' id='pag_$table'><ul>$var</ul></div>";
+        $out = "<div class='paginator' id='pag_$table'><ul class='pagination'>$var</ul></div>";
         if(!self::$imprime) return $out;
         echo $out;
     }
 }
-
-?>
