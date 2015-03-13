@@ -215,9 +215,11 @@ class htmlResource extends \classes\Interfaces\resource{
         //echo "($action_url)";
         
         $url    = $this->getLink($action_url);
-        $target = ($target == "")?"":"target='$target'";
-        return "<a href='$url' id='$id' class='action_perm $class' $function $target $extra>$texto_link</a>";
+        $trgt   = ($target == "")?"":"target='$target'";
+        $active = ($url == "#")?" active ":"";
+        return "<a href='$url' id='$id' class='action_perm $active $class' $function $trgt $extra>$texto_link</a>";
     }
+    
         private function discoverModel($bs){
             $bs = trim($bs);
             if(strstr($bs, 'http://') !== false || strstr($bs, 'https://') !== false){return $bs;}
