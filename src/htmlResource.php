@@ -194,7 +194,7 @@ class htmlResource extends \classes\Interfaces\resource{
         return $url.getSystemParams();
     }
     
-    public function getActionLinkIfHasPermission($action_url, $texto_link, $class = '', $id = "", $target = "", $extra = ''){
+    public function getActionLinkIfHasPermission($action_url, $texto_link, $class = '', $id = "", $target = "", $extra = '', $disable_actperm = false){
         $function = "";$this->curModel = '';
         //echo "($action_url)";
         //se url não contém o prefixo http
@@ -213,11 +213,11 @@ class htmlResource extends \classes\Interfaces\resource{
             $function = "onclick='if(!confirm(\"Você está deixando o site ".SITE_NOME." e indo para o site $action_url. Deseja continuar?\")){return false;}'";
         }
         //echo "($action_url)";
-        
-        $url    = $this->getLink($action_url);
-        $trgt   = ($target == "")?"":"target='$target'";
-        $active = ($url == "#")?" active ":"";
-        return "<a href='$url' id='$id' class='action_perm $active $class' $function $trgt $extra>$texto_link</a>";
+        $actionp = ($disable_actperm)?"":"action_perm";
+        $url     = $this->getLink($action_url);
+        $trgt    = ($target == "")?"":"target='$target'";
+        $active  = ($url == "#")?" active ":"";
+        return "<a href='$url' id='$id' class='$actionp $active $class' $function $trgt $extra>$texto_link</a>";
     }
     
         private function discoverModel($bs){
