@@ -29,22 +29,31 @@ class tableResource extends \classes\Interfaces\resource {
     
     public function printable($bool = false){
     	$this->isprintable = (is_bool($bool))?$bool:false;
+        return $this;
     }
     
     private $drawheaders = false;
     public function forceDrawHeaders(){
         $this->drawheaders = true;
+        return $this;
+    }
+    
+    private function getHeader($header, $center){
+        if(!empty($header) || empty($center)){return $header;}
+        $var        = end($center);
+        $notnumeric = false;
+        foreach($var as $name => $value)  {
+            if(!is_numeric($name)){$notnumeric = true;}
+            $header[] = $name;
+        }
+        return ($notnumeric)?$header:array();
     }
     
     public function draw($center, $header = array(),$footer = array(), $id = "", $class = "table table-hover table-stripped"){
 
         if(!$this->drawheaders &&(!is_array($center) || empty ($center))) return;
         $this->load();
-        if(empty($header) && !empty($center)){
-            $var = end($center);
-            foreach($var as $name => $value)  $header[] = $name;
-        }
-        
+        $header = $this->getHeader($header, $center);
         if(empty($footer) && is_array($center) && (count($center) > 30)){
             $footer = $header;
         }
