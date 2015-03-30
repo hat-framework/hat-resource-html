@@ -49,7 +49,7 @@ class tableResource extends \classes\Interfaces\resource {
         return ($notnumeric)?$header:array();
     }
     
-    public function draw($center, $header = array(),$footer = array(), $id = "", $class = "table table-hover table-stripped"){
+    public function draw($center, $header = array(),$footer = array(), $id = "", $class = "table table-hover table-stripped table-responsive"){
 
         if(!$this->drawheaders &&(!is_array($center) || empty ($center))) return;
         $this->load();
