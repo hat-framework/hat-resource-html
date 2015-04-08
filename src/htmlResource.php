@@ -98,11 +98,17 @@ class htmlResource extends \classes\Interfaces\resource{
         $temp = "/img/" . $image;
         $file = \classes\Classes\Registered::getTemplateLocation($this->template_name, true).strtolower($temp);
         getTrueDir($file);
+        if(file_exists($file)){
+            return URL. \classes\Classes\Registered::getTemplateLocation($this->template_name).strtolower($temp);
+        }
+        
+        $file = DIR_BASIC . $image;
+        getTrueDir($file);
         if(!file_exists($file)){
-            if($alert) echo "<div class='erro'>erro ao carregar a imagem $file</div>";
+            if($alert) {echo "<div class='erro'>erro ao carregar a imagem $file</div>";}
             return "";
         }
-        return URL. \classes\Classes\Registered::getTemplateLocation($this->template_name).strtolower($temp);
+        return URL."Application/".strtolower($image);
     }
     
     public function LoadExternImage($image, $class="", $print = true, $extra = ""){
