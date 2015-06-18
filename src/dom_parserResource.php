@@ -42,4 +42,48 @@ class dom_parserResource extends \classes\Interfaces\resource{
         $dom->load($str, $lowercase, $stripRN);
         return $dom;
     }
+    
+    public function parseTable2Array($html, $parseText){
+        if($html == "") {return $this->setErrorMessage("Caro usuário, o html enviado para parsing está vazio!");}
+        $obj = $this->parseStart($html);
+        if(is_array($obj) && empty($obj)){return false;}
+        
+        $lines = $this->getLines($obj, $parseText);
+        if($lines === false){return false;}
+        
+        return $this->getArray($lines);
+    }
+    
+            private function parseStart($html){
+                $obj   = $this->parseHtml($html);
+                if(!is_object($obj) || $obj === false){
+                    $this->setErrorMessage("Erro ao encontrar os links no parseHtml");
+                    return array();
+                }
+                return $obj;
+            }
+            
+            private function getLines($obj, $parseText){
+                $links = $obj->find("$parseText > tbody > tr");
+                if(false === $links){
+                    return $this->setErrorMessage("Erro ao encontrar '$parseText'");
+                }
+                return $links;
+            }
+            
+            private function getArray($lines){
+                $i   = $key = 0;
+                $arr = array();
+                foreach($lines as $line){
+                    $i = 0;
+                    while($data = $line->find('td', $i)){
+                        if($data === false || !is_object($data)){break;}
+                        $arr[$key-1][$i] = trim(strip_tags($data->innertext));
+                        $i++;
+                    }
+                    $key++;
+                }
+                return $arr;
+            }
+                    
 }
