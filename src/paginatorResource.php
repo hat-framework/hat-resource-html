@@ -43,14 +43,22 @@ class paginatorResource extends \classes\Interfaces\resource{
             $this->page  = (is_numeric($page))? $page : 1;
             $this->limit = $limit;
             
-            $lk   = $link;
-            $link = $this->LoadResource('html', 'html')->getLink($link, true,true);
-            if(!empty($_GET) && strstr($lk, 'http://') === false){
-                foreach($_GET as $nm => $v){
-                    if($nm == 'url') continue;
-                    $link .= "&{$nm}={$v}";
-                }
+            $lk      = $link;
+            
+            $urlget = $this->getUrlGet($link);
+            
+            $u      = isset($urlget['url'])?$urlget['url']:$lk;
+            $mlink  = $this->LoadResource('html', 'html')->getLink($link, true,true) . "?url=$u";
+            
+            foreach($_GET as $nm => $v){
+                if($nm == 'url' || array_key_exists($nm, $urlget)) {continue;}
+                $mlink .= "&{$nm}={$v}";
             }
+            foreach($urlget as $nm => $v){
+                if($nm == 'url'){continue;}
+                $mlink .= "&{$nm}={$v}";
+            }
+            $link = $mlink;
             $this->link = ($link[strlen($link) -1] == "/") ? $link:"$link/";
             $max_numlinks = ($max_numlinks%2 == 1)? $max_numlinks: $max_numlinks - 1;
             $this->max_numlinks = (($max_numlinks) < 3)? 3 : $max_numlinks;
@@ -75,6 +83,21 @@ class paginatorResource extends \classes\Interfaces\resource{
             return $this->geraLink();
              
         }
+        
+                private function getUrlGet($link){
+                    $temp = explode("?", $link);
+                    if(empty($temp)){return array();}
+                    $t2   = explode("&", end($temp));
+
+                    if(empty($t2)){return array();}
+                    $out  = array();
+                    foreach($t2 as $t){
+                        $vv = explode("=", $t);
+                        if(!isset($vv[1])){continue;}
+                        $out[$vv[0]] = $vv[1];
+                    }
+                    return $out;
+                }
         
         private $debuggin = false;
         public function startDebug(){
