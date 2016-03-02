@@ -38,6 +38,7 @@ class paginatorResource extends \classes\Interfaces\resource{
         public function Paginacao($table, $link, $limit = 20, $page = 1, $max_numlinks = 12){
 
             //carrega o total de registros da tabela
+            $this->initDebugging($table);
             $this->table = $table;
             $this->count = $this->GetCount($table);
             $this->page  = (is_numeric($page))? $page : 1;
@@ -48,7 +49,7 @@ class paginatorResource extends \classes\Interfaces\resource{
             $urlget = $this->getUrlGet($link);
             
             $u      = isset($urlget['url'])?$urlget['url']:$lk;
-            $mlink  = $this->LoadResource('html', 'html')->getLink($link, true,true) . "?url=$u";
+            $mlink  = $this->LoadResource('html', 'html')->getLink('', true,true) . "?url=$u";
             
             foreach($_GET as $nm => $v){
                 if($nm == 'url' || array_key_exists($nm, $urlget)) {continue;}
@@ -112,6 +113,12 @@ class paginatorResource extends \classes\Interfaces\resource{
             return $this->debuggin;
         }
         
+        private function initDebugging($table){
+            if(usuario_loginModel::IsWebmaster() && isset($_GET['paginator_debug']) && $_GET['paginator_debug'] == $table){
+                $this->debuggin = true;
+            }else{$this->debuggin = false;}
+        }
+        
         public function setPaginationType($model, $type = ''){
             $types = array('multipage', 'singlepage');
             $type  = (in_array($type, $types))?$type:'multipage';
@@ -135,7 +142,6 @@ class paginatorResource extends \classes\Interfaces\resource{
             
             $model->db->setJoin($this->join);
             $out = $model->selecionar($campos, $where, $this->limit , $this->offset, $orderby);
-            
             if($this->debuggin()){                
                 $sentenca  = $this->db->getFormatedSentenca();
                 $var  = "<b>Método: </b>".__METHOD__."<br/>\n";
