@@ -297,7 +297,10 @@ class htmlResource extends \classes\Interfaces\resource{
             if(array_key_exists($js, $this->js_file)) continue;
             if(array_key_exists($js, $loaded)) continue;
             $loaded[$js] = "";
-            $uniqueurl = ($uniqueurl)?"?t=".genKey(6):"";
+            if($uniqueurl != false){
+                if($uniqueurl === true){$uniqueurl = "?t=".genKey(6);}
+                else{$uniqueurl = "?v=$uniqueurl";}
+            }
             $js = $js . ".js".$uniqueurl;
             $js = str_replace('.js.js', '.js', $js);
             $this->js_file[$js] = "";
@@ -330,12 +333,12 @@ class htmlResource extends \classes\Interfaces\resource{
         return(file_exists($file))?URL_JS . "bower_components/$file":"";
     }
     
-    public function LoadPlugin($plugname, $files){
+    public function LoadPlugin($plugname, $files, $version = ""){
         if($files === "" || empty($files)){return;}
         if(!is_array($files)){$files = array($files);}
         $url = \classes\Classes\Registered::getPluginLocationUrl($plugname);
         foreach($files as &$f){$f = "$url/$f";}
-        $this->LoadJs($files);
+        $this->LoadJs($files, false, $version);
     }
     
     private function loadAngularFile($file){
