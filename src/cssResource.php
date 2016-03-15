@@ -16,15 +16,17 @@ class cssResource extends \classes\Interfaces\resource{
         return self::$instance;
     }
     
-    public function LoadCssIfExists($template, $theme, $media, $css, $print = true, $unique = false){
+    public function LoadCssIfExists($template, $theme, $media, $css, $print = true){
+        $this->LoadResource('html', 'html');
         $files[] = \classes\Classes\Registered::getTemplateLocation($template). "/themes/$theme/$css";
         $files[] = \classes\Classes\Registered::getTemplateLocation($template). "/themes/default/$css";
         $files[] = \classes\Classes\Registered::getTemplateLocation($template). "/css/$css";
         foreach($files as $file){
             //echo $file . "<br/>";
-            if(!file_exists(BASE_DIR.$file)) continue;
+            if(!file_exists(BASE_DIR.$file)) {continue;}
+            $temp  = $this->html->auto_version($file);
+            if($temp != ""){$file = $temp;}
             $url   = URL.$file;
-            if($unique) $url .= "?".  genKey('6');
             $media = ($media == '') ? 'screen': $media;
             $var = "<link rel='stylesheet' type='text/css' href='$url' media='$media'/>\n";
             if($print) {echo $var;}

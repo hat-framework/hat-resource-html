@@ -27,7 +27,7 @@ class htmlResource extends \classes\Interfaces\resource{
     */
     public function __construct() {
         $this->LoadResource('js/jsminifier', 'jsmin');
-        $this->LoadJs(URL_JS . "lib/html/html");
+        $this->LoadJs("lib/html/html");
         $this->separador     = (DEBUG)?"\n\n\t":"";
         if(defined("CURRENT_TEMPLATE")) $this->template_name = CURRENT_TEMPLATE;
         else $this->template_name = "area-admin";
@@ -141,14 +141,14 @@ class htmlResource extends \classes\Interfaces\resource{
         return $this->css->LoadCssIfExists($this->template_name, $this->theme, $media, $css);
     }
     
-    public function loadCss($csss, $media = "", $unique = false){
+    public function loadCss($csss, $media = ""){
         //se o arquivo já foi carregado
         if(!is_array($csss)) $csss = array($csss);
         foreach($csss as $cs){
             if(array_key_exists($cs, $this->css_file)) continue;
             $this->css_file[$cs] = "";
             $css = $cs . ".css";
-            $var = $this->css->LoadCss($this->template_name, $this->theme, $media, $css, false, $unique);
+            $var = $this->css->LoadCss($this->template_name, $this->theme, $media, $css, false);
             if($this->started) echo $var;
             else $this->addToStarted[] = $var;
         }
@@ -157,9 +157,9 @@ class htmlResource extends \classes\Interfaces\resource{
     public function loadExternCss($css, $media = "", $force = false){
         //se o arquivo já foi carregado
         if(false === $force){return;}
-        if(array_key_exists($css, $this->css_file)) return;
+        if(array_key_exists($css, $this->css_file)) {return;}
+        $css = str_replace(".css.css", '.css', $css . ".css");
         $this->css_file[$css] = "";
-        $css = $css . ".css";
         $media = ($media == '') ? 'screen': $media;
         $var = "<link rel='stylesheet' type='text/css' href='$css' media='$media'/>\n";
         if($this->started) echo $var;
@@ -293,29 +293,31 @@ class htmlResource extends \classes\Interfaces\resource{
         static $loaded = array();
         if(!is_array($jss)) $jss = array($jss);
         foreach($jss as $js){
-            if(strstr($js, 'http') === false) $js = URL_JS . $js;
-            if(array_key_exists($js, $this->js_file)) continue;
-            if(array_key_exists($js, $loaded)) continue;
-            $loaded[$js] = "";
-            if($uniqueurl != false){
-                if($uniqueurl === true){$uniqueurl = "?t=".genKey(6);}
-                else{$uniqueurl = "?v=$uniqueurl";}
+            if(strstr($js, 'http') === false) {
+                $tmpjs = str_replace('.js.js', '.js', $js . ".js");
+                $dir   = DIR_JS.$tmpjs;
+                $e     = explode("Application", $dir);
+                $dir2  = "Application/{$e[1]}";
+                getTrueDir($dir2);
+                $dir3  = $this->auto_version($dir2);
+                $js    = URL . $dir3;
+                getTrueUrl($js);
             }
-            $js = $js . ".js".$uniqueurl;
+            if(array_key_exists($js, $this->js_file)) {continue;}
+            if(array_key_exists($js, $loaded)) {continue;}
+            $loaded[$js] = "";
+            $js = $js . ".js";
             $js = str_replace('.js.js', '.js', $js);
             $this->js_file[$js] = "";
-            /*if(!$instant){
-                $var = "<script type='text/javascript' src='$js'></script>";
-                if($this->started) echo $var;
-                else $this->addToStarted[] = $var;
-            }else $this->js_file[$js] = "";*/
         }
     }
     
     public function LoadBowerComponentCss($file){
         if(!is_array($file)){$file = array($file);}
         foreach($file as &$f){
-            $this->loadExternCss(URL_JS."bower_components/$f", "", true);
+            $dir  = "Application/static/js/bower_components/$f.css";
+            $dir2 = $this->auto_version($dir);
+            $this->loadExternCss(URL.$dir2, "", true);
         }
     }
     
@@ -337,9 +339,32 @@ class htmlResource extends \classes\Interfaces\resource{
         if($files === "" || empty($files)){return;}
         if(!is_array($files)){$files = array($files);}
         $url = \classes\Classes\Registered::getPluginLocationUrl($plugname);
-        foreach($files as &$f){$f = "$url/$f";}
+        foreach($files as &$f){
+            if($version != ""){
+                $dir = \classes\Classes\Registered::getPluginLocation($plugname);
+                $f   = URL . $this->auto_version("$dir/$f.js");
+            }
+            else{$f = "$url/$f";}
+        }
         $this->LoadJs($files, false, $version);
     }
+
+        /**
+         *  Given a file, i.e. /css/base.css, replaces it with a string containing the
+         *  file's mtime, i.e. /css/base.1221534296.css.
+         *  
+         *  @param $file  The file to be loaded.  Must be an absolute path (i.e.
+         *                starting with slash).
+         */
+        public function auto_version($file){
+            $filename = $_SERVER['DOCUMENT_ROOT'] .'/'. $file;
+            if(!file_exists($filename)){
+                return "";
+            }
+
+            $mtime = filemtime($filename);
+            return preg_replace('{\\.([^./]+)$}', ".$mtime.\$1", $file);
+        }
     
     private function loadAngularFile($file){
         if($file == ""){
