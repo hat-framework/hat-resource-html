@@ -335,18 +335,25 @@ class htmlResource extends \classes\Interfaces\resource{
         return(file_exists($file))?URL_JS . "bower_components/$file":"";
     }
     
-    public function LoadPlugin($plugname, $files, $version = ""){
+    public function LoadPlugin($plugname, $files){
         if($files === "" || empty($files)){return;}
         if(!is_array($files)){$files = array($files);}
         $url = \classes\Classes\Registered::getPluginLocationUrl($plugname);
-        foreach($files as &$f){
-            if($version != ""){
-                $dir = \classes\Classes\Registered::getPluginLocation($plugname);
-                $f   = URL . $this->auto_version("$dir/$f.js");
+        $js  = array();
+        $css = array();
+        foreach($files as $f){
+            $f = "$url/$f";
+            if(strstr($f, '.css')){
+                $css[] = $f;
             }
-            else{$f = "$url/$f";}
+            else{$js[] = $f;}
         }
-        $this->LoadJs($files, false, $version);
+        if(!empty($js)){$this->LoadJs($js, false);}
+        if(!empty($css)){
+            foreach($css as $csss){
+                $this->loadExternCss($csss, '', true);
+            }
+        }
     }
 
         /**
