@@ -413,7 +413,7 @@ class htmlResource extends \classes\Interfaces\resource{
         
         $this->js_file = array_keys($this->js_file);
         foreach($this->js_file as $js){
-            $var = "\n<script type='text/javascript' src='$js' defer></script>";
+            $var = "\n<script type='text/javascript' src='$js'></script>";
             if(!$this->started) $this->addToStarted[] = $var;
             else echo $var;
         }
@@ -428,7 +428,7 @@ class htmlResource extends \classes\Interfaces\resource{
                 $jss = jsminifierResource::minify($jss);
             }
             $var = "\n
-                  <script type='text/javascript' defer>\n
+                  <script type='text/javascript'>\n
                     function __hat__html(){
                         var __html = new html();
                         $(document).ready(function() { $jqu });
