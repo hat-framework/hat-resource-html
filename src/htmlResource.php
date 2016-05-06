@@ -149,8 +149,11 @@ class htmlResource extends \classes\Interfaces\resource{
             $this->css_file[$cs] = "";
             $css = $cs . ".css";
             $var = $this->css->LoadCss($this->template_name, $this->theme, $media, $css, false);
-            if($this->started) echo $var;
-            else $this->addToStarted[] = $var;
+            if($this->started) {echo $var;}
+            else {
+                if($cs == 'bootstrap'){array_unshift($this->addToStarted, $var);}
+                else{$this->addToStarted[] = $var;}
+            }
         }
     }
     
@@ -410,7 +413,7 @@ class htmlResource extends \classes\Interfaces\resource{
         
         $this->js_file = array_keys($this->js_file);
         foreach($this->js_file as $js){
-            $var = "\n<script type='text/javascript' src='$js'></script>";
+            $var = "\n<script type='text/javascript' src='$js' defer></script>";
             if(!$this->started) $this->addToStarted[] = $var;
             else echo $var;
         }
@@ -425,7 +428,7 @@ class htmlResource extends \classes\Interfaces\resource{
                 $jss = jsminifierResource::minify($jss);
             }
             $var = "\n
-                  <script type='text/javascript'>\n
+                  <script type='text/javascript' defer>\n
                     function __hat__html(){
                         var __html = new html();
                         $(document).ready(function() { $jqu });
@@ -444,7 +447,7 @@ class htmlResource extends \classes\Interfaces\resource{
         }
         foreach($this->jsfunctions as $type => $functions){
             if(!DEBUG) $functions = jsminifierResource::minify($functions);
-            if($type == 'text/javascript') continue;
+            if($type == 'text/javascript') {continue;}
             $var = "\n
                   <script type='$type'>\n".
                   $functions.
