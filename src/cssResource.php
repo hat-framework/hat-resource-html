@@ -39,12 +39,12 @@ class cssResource extends \classes\Interfaces\resource{
         if(isset($_POST['ajax'])) return;
         $var = $this->LoadCssIfExists($template, $theme, $media, $css, $print, $unique);
         if($var === false && DEBUG){
-            try{
-                if(usuario_loginModel::IsWebmaster() && !isset($_REQUEST['ajax'])){
-                    echo "<div class='layout-erro'>Arquivo css $css não foi encontrado</div>";
-                }
-            } catch (Exception $ex) {}
-            
+//            try{
+//                if(usuario_loginModel::IsWebmaster() && !isset($_REQUEST['ajax'])){
+//                    echo "<div class='layout-erro'>Arquivo css $css não foi encontrado</div>";
+//                }
+//            } catch (Exception $ex) {}
+//            
             return "";
         }
         return $var;
