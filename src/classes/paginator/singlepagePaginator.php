@@ -40,6 +40,7 @@ class singlepagePaginator extends drawPaginator{
         foreach($arr as $link => $num){
             if($page != $num) continue;
             $link = self::$html->getLink($link, true);
+			die($link);
             $class = ($page == $num)?"class='atual'":"";
             $var = "<a href='$link' class='atual load_older'>Mostrar mais antigas</a>";
             break;

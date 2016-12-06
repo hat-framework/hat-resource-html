@@ -44,22 +44,7 @@ class paginatorResource extends \classes\Interfaces\resource{
             $this->page  = (is_numeric($page))? $page : 1;
             $this->limit = $limit;
             
-            $lk      = $link;
-            
-            $urlget = $this->getUrlGet($link);
-            
-            $u      = isset($urlget['url'])?$urlget['url']:$lk;
-            $mlink  = $this->LoadResource('html', 'html')->getLink('', true,true) . "?url=$u";
-            
-            foreach($_GET as $nm => $v){
-                if($nm == 'url' || array_key_exists($nm, $urlget)) {continue;}
-                $mlink .= "&{$nm}={$v}";
-            }
-            foreach($urlget as $nm => $v){
-                if($nm == 'url'){continue;}
-                $mlink .= "&{$nm}={$v}";
-            }
-            $link = $mlink;
+            $link		= $this->prepareLink($link);
             $this->link = ($link[strlen($link) -1] == "/") ? $link:"$link/";
             $max_numlinks = ($max_numlinks%2 == 1)? $max_numlinks: $max_numlinks - 1;
             $this->max_numlinks = (($max_numlinks) < 3)? 3 : $max_numlinks;
@@ -84,6 +69,35 @@ class paginatorResource extends \classes\Interfaces\resource{
             return $this->geraLink();
              
         }
+		
+				private function prepareLink($link){
+					$lk      = $link;
+					$urlget = $this->getUrlGet($link);
+					$u      = isset($urlget['url'])?$urlget['url']:$lk;
+					$mlink  = $this->LoadResource('html', 'html')->getLink('', true,true);
+					$conector = "?";
+					foreach($_GET as $nm => $v){
+						if($nm == 'url' || array_key_exists($nm, $urlget)) {continue;}
+						if(!is_array($v)){
+							$mlink .= "$conector{$nm}={$v}";
+							$conector = "&";
+							continue;
+						}
+						
+						foreach($v as $vvl){
+							$mlink .= "{$conector}{$nm}[]={$vvl}";
+							$conector = "&";
+						}
+					}
+					
+					foreach($urlget as $nm => $v){
+						if($nm == 'url'){continue;}
+						$mlink .= "$conector{$nm}={$v}";
+						$conector = "&";
+					}
+
+					return $mlink .$conector. "url=$u";
+				}
         
                 private function getUrlGet($link){
                     $temp = explode("?", $link);
@@ -142,7 +156,8 @@ class paginatorResource extends \classes\Interfaces\resource{
             
             $model->db->setJoin($this->join);
             $out = $model->selecionar($campos, $where, $this->limit , $this->offset, $orderby);
-            if($this->debuggin()){                
+            if($this->debuggin()){
+				die("foo");
                 $sentenca  = $this->db->getFormatedSentenca();
                 $var  = "<b>Método: </b>".__METHOD__."<br/>\n";
                 $var .= "<b>Tabela: </b>$this->table<br/>\n";

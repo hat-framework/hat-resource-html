@@ -129,8 +129,8 @@ class htmlResource extends \classes\Interfaces\resource{
      */
     public function addSytle($csss){
         if(trim($csss) === ""){return;};
-        if(!$this->started) $this->addToStarted[] = $csss;
-        else echo "<style>$csss</style>";
+		if(!$this->started) {$this->addToStarted[] = "<style type='text/css'>$csss</style>";}
+        else echo "<style type='text/css'>$csss</style>";
     }
     
     public function loadCssIfExists($csss, $media = ""){
