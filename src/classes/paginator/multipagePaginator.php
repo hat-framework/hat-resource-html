@@ -19,7 +19,7 @@ class multipagePaginator extends drawPaginator{
             $link   = self::$html->getLink($link, true);
             $class  = ($page == $num)?"class='atual'":"";
             $active = ($page == $num)?"class='active'":"";
-            $var .= "<li $active><a href='$link#pag_$table' $class>$num</a></li>";
+            $var .= "<li $active><a href='$link#$table' $class>$num</a></li>";
         }
         if($var == "") return "";
         $out = "<div class='paginator' id='pag_$table'><ul class='pagination'>$var</ul></div>";

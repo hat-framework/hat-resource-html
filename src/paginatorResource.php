@@ -115,15 +115,19 @@ class paginatorResource extends \classes\Interfaces\resource{
                 }
         
         private $debuggin = false;
+        private $force_debug = false;
         public function startDebug(){
             $this->debuggin = true;
+            $this->force_debug = true;
         }
         
         public function stopDebug(){
             $this->debuggin = false;
+            $this->force_debug = false;
         }
         
         public function debuggin(){
+            if($this->force_debug){return true;}
             return $this->debuggin;
         }
         
@@ -157,7 +161,7 @@ class paginatorResource extends \classes\Interfaces\resource{
             $model->db->setJoin($this->join);
             $out = $model->selecionar($campos, $where, $this->limit , $this->offset, $orderby);
             if($this->debuggin()){
-				die("foo");
+                $error     = $this->db->getErrorMessage();
                 $sentenca  = $this->db->getFormatedSentenca();
                 $var  = "<b>Método: </b>".__METHOD__."<br/>\n";
                 $var .= "<b>Tabela: </b>$this->table<br/>\n";
@@ -165,7 +169,13 @@ class paginatorResource extends \classes\Interfaces\resource{
                 $var .= "<b>Total de Páginas: </b>$this->total_pages<br/>\n";
                 $var .= "<hr/><b>Sql da Paginação: </b><br/>$this->pagsentenca<br/>\n";
                 $var .= "<hr/><b>Sql da Seleção: </b><br/>$sentenca\n\n<hr/><br/><br/>";
+                if(trim($error) !== ""){$var .= "<hr/><b>Mensagem de Erro: </b><br/>$error\n\n<hr/><br/><br/>";}
                 echo($var);
+                if(!empty($out)){
+                    print_in_table($out);
+                }else{
+                    echo "<hr/> Seleção não retornou nenhum resultado!";
+                }
             }
             EventTube::addEvent('paginate_'.$model->getTable(), $this->draw(false, $modelname));
             return $out;
@@ -218,6 +228,15 @@ class paginatorResource extends \classes\Interfaces\resource{
             if($this->total_pages > 1){
                 $mylink = $this->link .$this->total_pages;
                 $this->arr[$mylink] = "Última";
+            }
+            
+            
+            if(usuario_loginModel::CodUsuario() == 1){
+                if(isset($_GET['paginator_debug']) && $_GET['paginator_debug'] == $this->table){
+                    $link = str_replace(array("&paginator_debug=$this->table", "paginator_debug=$this->table"), "", $this->link);
+                    $this->arr[$link] = "Debug Disable";
+                }
+                else{$this->arr["$this->link&paginator_debug=$this->table"] = "Debug";}
             }
         }
         
