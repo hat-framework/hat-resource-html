@@ -5,6 +5,7 @@ class htmlResource extends \classes\Interfaces\resource{
     private $toInitialize = "";
     private $jqfunctions = "";
     private $jsfunctions = array();
+    private $replace = "Application";
     /**
     * @uses nome do template
     */
@@ -26,6 +27,7 @@ class htmlResource extends \classes\Interfaces\resource{
     * @return retorna um objeto com a instância do banco de dados
     */
     public function __construct() {
+        $this->replace = $_SERVER['SERVER_NAME'];
         $this->LoadResource('js/jsminifier', 'jsmin');
         $this->LoadJs("lib/html/html");
         $this->separador     = (DEBUG)?"\n\n\t":"";
@@ -299,8 +301,8 @@ class htmlResource extends \classes\Interfaces\resource{
             if(strstr($js, 'http') === false) {
                 $tmpjs = str_replace('.js.js', '.js', $js . ".js");
                 $dir   = DIR_JS.$tmpjs;
-                $e     = explode("Application", $dir);
-                $dir2  = "Application/{$e[1]}";
+                $e     = explode($this->replace, $dir);
+                $dir2  = "/{$e[1]}";
                 getTrueDir($dir2);
                 $dir3  = $this->auto_version($dir2);
                 $js    = URL . $dir3;
@@ -318,7 +320,7 @@ class htmlResource extends \classes\Interfaces\resource{
     public function LoadBowerComponentCss($file){
         if(!is_array($file)){$file = array($file);}
         foreach($file as &$f){
-            $dir  = "Application/static/js/bower_components/$f.css";
+            $dir  = "js/bower_components/$f.css";
             $dir2 = $this->auto_version($dir);
             $this->loadExternCss(URL.$dir2, "", true);
         }
