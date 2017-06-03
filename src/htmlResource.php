@@ -27,7 +27,7 @@ class htmlResource extends \classes\Interfaces\resource{
     * @return retorna um objeto com a instância do banco de dados
     */
     public function __construct() {
-        $this->replace = $_SERVER['SERVER_NAME'];
+        $this->replace = APPLICATION_DIR;
         $this->LoadResource('js/jsminifier', 'jsmin');
         $this->LoadJs("lib/html/html");
         $this->separador     = (DEBUG)?"\n\n\t":"";
@@ -110,7 +110,7 @@ class htmlResource extends \classes\Interfaces\resource{
             if($alert) {echo "<div class='erro'>erro ao carregar a imagem $file</div>";}
             return "";
         }
-        return URL."Application/".strtolower($image);
+        return URL.APPLICATION_DIR."/".strtolower($image);
     }
     
     public function LoadExternImage($image, $class="", $print = true, $extra = ""){
