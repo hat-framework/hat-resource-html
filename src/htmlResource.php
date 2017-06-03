@@ -27,7 +27,7 @@ class htmlResource extends \classes\Interfaces\resource{
     * @return retorna um objeto com a instância do banco de dados
     */
     public function __construct() {
-        $this->replace = APPLICATION_DIR;
+        $this->replace = ROOT_FOLDER_NAME;
         $this->LoadResource('js/jsminifier', 'jsmin');
         $this->LoadJs("lib/html/html");
         $this->separador     = (DEBUG)?"\n\n\t":"";
