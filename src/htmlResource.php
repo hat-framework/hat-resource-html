@@ -370,6 +370,7 @@ class htmlResource extends \classes\Interfaces\resource{
          */
         public function auto_version($file){
             $filename = $_SERVER['DOCUMENT_ROOT'] .'/'. $file;
+            getTrueDir($filename);
             if(!file_exists($filename)){
                 return "";
             }
